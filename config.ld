@@ -9,4 +9,6 @@ description = "A LuaJIT FFI binding for Telegram's Database Library (TDLib)'s JS
 dir = "docs"
 style = "!pale"
 format = "markdown"
+readme = "readme.md"
+examples = {"examples"}
 no_space_before_args = true

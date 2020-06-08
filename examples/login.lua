@@ -1,3 +1,4 @@
+--- Example script for authenticating a Telegram user.
 local tdlib = require("luajit-tdlib")
 
 --The appID, and appHash, obtained from https://my.telegram.org/apps

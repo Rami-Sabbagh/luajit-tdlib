@@ -1,0 +1,168 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>luajit-tdlib documentation</title>
+    <link rel="stylesheet" href="../ldoc_pale.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>luajit-tdlib</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+
+
+<h2>Examples</h2>
+<ul class="nowrap">
+  <li><strong>login.lua</strong></li>
+</ul>
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/luajit-tdlib.html">luajit-tdlib</a></li>
+</ul>
+<h2>Classes</h2>
+<ul class="nowrap">
+  <li><a href="../classes/Client.html">Client</a></li>
+</ul>
+<h2>Topics</h2>
+<ul class="">
+  <li><a href="../topics/readme.md.html">readme</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+    <h2>login.lua</h2>
+<pre>
+<span class="comment">--- Example script for authenticating a Telegram user.
+</span><span class="comment">-- @script login.lua
+</span><span class="keyword">local</span> tdlib = <span class="global">require</span>(<span class="string">"luajit-tdlib"</span>)
+
+<span class="comment">--The appID, and appHash, obtained from https://my.telegram.org/apps
+</span><span class="global">print</span>(<span class="string">"Please input the app id:"</span>)
+<span class="keyword">local</span> appID = <span class="global">io</span>.read(<span class="string">"*l"</span>)
+<span class="global">print</span>(<span class="string">"= Please input the app hash:"</span>)
+<span class="keyword">local</span> appHash = <span class="global">io</span>.read(<span class="string">"*l"</span>)
+
+<span class="global">print</span>(<span class="string">"== Initialize TDLib..."</span>)
+tdlib.initialize(<span class="string">"./libtdjson.so"</span>)
+
+<span class="global">print</span>(<span class="string">"== Creating a new client..."</span>)
+<span class="keyword">local</span> client = tdlib.newClient()
+
+<span class="global">print</span>(<span class="string">"== Setting logging level..."</span>)
+client:execute{
+    [<span class="string">"@type"</span>] = <span class="string">"setLogVerbosityLevel"</span>,
+    new_verbosity_level = <span class="number">1</span> <span class="comment">--We don't want the logging messages to fill our terminal
+</span>}
+
+<span class="global">print</span>(<span class="string">"== Listening for responses..."</span>)
+<span class="keyword">while</span> <span class="keyword">true</span> <span class="keyword">do</span>
+    <span class="keyword">local</span> response = client:receive(<span class="number">10</span>)
+
+    <span class="keyword">if</span> response <span class="keyword">then</span>
+        <span class="keyword">local</span> rtype = response[<span class="string">"@type"</span>]
+
+        <span class="keyword">if</span> rtype == <span class="string">"authorizedStateClosed"</span> <span class="keyword">then</span>
+            <span class="global">print</span>(<span class="string">"== Exiting..."</span>)
+            <span class="keyword">break</span>
+        <span class="keyword">elseif</span> rtype == <span class="string">"error"</span> <span class="keyword">then</span>
+            <span class="global">print</span>(<span class="string">"== ERROR:"</span>, response.code, response.message)
+        <span class="keyword">elseif</span> rtype == <span class="string">"updateAuthorizationState"</span> <span class="keyword">then</span>
+            <span class="keyword">local</span> authorizationState = response.authorization_state[<span class="string">"@type"</span>]
+
+            <span class="keyword">if</span> authorizationState == <span class="string">"authorizationStateWaitTdlibParameters"</span> <span class="keyword">then</span>
+                <span class="global">print</span>(<span class="string">"- Sending TDLib Parameters"</span>)
+                client:send{
+                    [<span class="string">"@type"</span>] = <span class="string">"setTdlibParameters"</span>,
+                    parameters = {
+                        [<span class="string">"@type"</span>] = <span class="string">"tdlibParameters"</span>,
+                        use_test_dc = <span class="keyword">nil</span>, <span class="comment">-- If set to true, the Telegram test environment will be used instead of the production environment.
+</span>                        database_directory = <span class="string">"./tdlib-db"</span>, <span class="comment">-- The path to the directory for the persistent database; if empty, the current working directory will be used.
+</span>                        files_directory = <span class="keyword">nil</span>, <span class="comment">-- The path to the directory for storing files; if empty, database_directory will be used.
+</span>                        use_file_database = <span class="keyword">nil</span>, <span class="comment">-- If set to true, information about downloaded and uploaded files will be saved between application restarts.
+</span>                        use_chat_info_database = <span class="keyword">nil</span>, <span class="comment">-- If set to true, the library will maintain a cache of users, basic groups, supergroups, channels and secret chats. Implies use_file_database.
+</span>                        use_message_database = <span class="keyword">true</span>, <span class="comment">-- If set to true, the library will maintain a cache of chats and messages. Implies use_chat_info_database.
+</span>                        use_secret_chats = <span class="keyword">nil</span>, <span class="comment">-- If set to true, support for secret chats will be enabled.
+</span>                        api_id = appID, <span class="comment">-- Application identifier for Telegram API access, which can be obtained at https://my.telegram.org.
+</span>                        api_hash = appHash, <span class="comment">-- Application identifier hash for Telegram API access, which can be obtained at https://my.telegram.org.
+</span>                        system_language_code = <span class="string">"en"</span>, <span class="comment">-- IETF language tag of the user's operating system language; must be non-empty.
+</span>                        device_model = <span class="string">"luajit-tdlua"</span>, <span class="comment">-- Model of the device the application is being run on; must be non-empty.
+</span>                        system_version = <span class="string">"dev"</span>, <span class="comment">-- Version of the operating system the application is being run on; must be non-empty.
+</span>                        application_version = <span class="string">"0.0.0"</span>, <span class="comment">-- Application version; must be non-empty.
+</span>                        enable_storage_optimizer = <span class="keyword">true</span>, <span class="comment">-- If set to true, old files will automatically be deleted.
+</span>                        ignore_file_names = <span class="keyword">nil</span> <span class="comment">-- If set to true, original file names will be ignored. Otherwise, downloaded files will be saved under names as close as possible to the original name.
+</span>                    }
+                }
+            <span class="keyword">elseif</span> authorizationState == <span class="string">"authorizationStateWaitEncryptionKey"</span> <span class="keyword">then</span>
+                <span class="global">print</span>(<span class="string">"- Sending encryption key"</span>)
+                client:send{
+                    [<span class="string">"@type"</span>] = <span class="string">"checkDatabaseEncryptionKey"</span>,
+                    encryption_key = <span class="string">""</span> <span class="comment">--No encryption
+</span>                }
+            <span class="keyword">elseif</span> authorizationState == <span class="string">"authorizationStateWaitPhoneNumber"</span> <span class="keyword">then</span>
+                <span class="global">print</span>(<span class="string">"= Please input the phone number:"</span>)
+                <span class="keyword">local</span> phoneNumber = <span class="global">io</span>.read(<span class="string">"*l"</span>)
+                <span class="global">print</span>(<span class="string">"Sending phone number"</span>)
+                client:send{
+                    [<span class="string">"@type"</span>] = <span class="string">"setAuthenticationPhoneNumber"</span>,
+                    phone_number = phoneNumber
+                }
+            <span class="keyword">elseif</span> authorizationState == <span class="string">"authorizationStateWaitCode"</span> <span class="keyword">then</span>
+                <span class="global">print</span>(<span class="string">"= Please input the authorization code:"</span>)
+                <span class="keyword">local</span> code = <span class="global">io</span>.read(<span class="string">"*l"</span>)
+                client:send{
+                    [<span class="string">"@type"</span>] = <span class="string">"checkAuthenticationCode"</span>,
+                    code = code
+                }
+            <span class="keyword">elseif</span> authorizationState == <span class="string">"authorizationStateWaitPassword"</span> <span class="keyword">then</span>
+                <span class="global">print</span>(<span class="string">"= Please input the authorization password:"</span>)
+                <span class="keyword">local</span> password = <span class="global">io</span>.read(<span class="string">"*l"</span>)
+                client:send{
+                    [<span class="string">"@type"</span>] = <span class="string">"checkAuthenticationPassword"</span>,
+                    password = password
+                }
+            <span class="keyword">elseif</span> authorizationState == <span class="string">"authorizationStateReady"</span> <span class="keyword">then</span>
+                <span class="global">print</span>(<span class="string">"----------------------------------------"</span>)
+                <span class="global">print</span>(<span class="string">"----------------LOGGED IN---------------"</span>)
+                <span class="global">print</span>(<span class="string">"----------------------------------------"</span>)
+                <span class="keyword">break</span>
+            <span class="keyword">end</span>
+
+        <span class="keyword">end</span>
+    <span class="keyword">end</span>
+<span class="keyword">end</span>
+
+<span class="global">print</span>(<span class="string">"End of script"</span>)</pre>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2020-06-09 00:00:33 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
