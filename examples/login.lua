@@ -39,16 +39,21 @@ while true do
                     ["@type"] = "setTdlibParameters",
                     parameters = {
                         ["@type"] = "tdlibParameters",
-                        use_message_database = true,
-                        api_id = appID,
-                        api_hash = appHash,
-                        system_language_code = "en",
-                        device_model = "luajit-tdlua",
-                        system_version = "dev",
-                        application_version = "0.0.0",
-                        enable_storage_optimizer = true,
-                        use_pfs = true,
-                        database_directory = "./tdlib-db"
+                        use_test_dc = nil, -- If set to true, the Telegram test environment will be used instead of the production environment.
+                        database_directory = "./tdlib-db", -- The path to the directory for the persistent database; if empty, the current working directory will be used.
+                        files_directory = nil, -- The path to the directory for storing files; if empty, database_directory will be used.
+                        use_file_database = nil, -- If set to true, information about downloaded and uploaded files will be saved between application restarts.
+                        use_chat_info_database = nil, -- If set to true, the library will maintain a cache of users, basic groups, supergroups, channels and secret chats. Implies use_file_database.
+                        use_message_database = true, -- If set to true, the library will maintain a cache of chats and messages. Implies use_chat_info_database.
+                        use_secret_chats = nil, -- If set to true, support for secret chats will be enabled.
+                        api_id = appID, -- Application identifier for Telegram API access, which can be obtained at https://my.telegram.org.
+                        api_hash = appHash, -- Application identifier hash for Telegram API access, which can be obtained at https://my.telegram.org.
+                        system_language_code = "en", -- IETF language tag of the user's operating system language; must be non-empty.
+                        device_model = "luajit-tdlua", -- Model of the device the application is being run on; must be non-empty. 
+                        system_version = "dev", -- Version of the operating system the application is being run on; must be non-empty.
+                        application_version = "0.0.0", -- Application version; must be non-empty.
+                        enable_storage_optimizer = true, -- If set to true, old files will automatically be deleted. 
+                        ignore_file_names = nil -- If set to true, original file names will be ignored. Otherwise, downloaded files will be saved under names as close as possible to the original name.
                     }
                 }
             elseif authorizationState == "authorizationStateWaitEncryptionKey" then
