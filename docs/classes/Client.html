@@ -1,0 +1,223 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+   "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<head>
+    <title>luajit-tdlib documentation</title>
+    <link rel="stylesheet" href="../ldoc_pale.css" type="text/css" />
+</head>
+<body>
+
+<div id="container">
+
+<div id="product">
+	<div id="product_logo"></div>
+	<div id="product_name"><big><b></b></big></div>
+	<div id="product_description"></div>
+</div> <!-- id="product" -->
+
+
+<div id="main">
+
+
+<!-- Menu -->
+
+<div id="navigation">
+<br/>
+<h1>luajit-tdlib</h1>
+
+<ul>
+  <li><a href="../index.html">Index</a></li>
+</ul>
+
+<h2>Contents</h2>
+<ul>
+<li><a href="#Methods">Methods</a></li>
+</ul>
+
+
+<h2>Classes</h2>
+<ul class="nowrap">
+  <li><strong>Client</strong></li>
+</ul>
+<h2>Modules</h2>
+<ul class="nowrap">
+  <li><a href="../modules/luajit-tdlib.html">luajit-tdlib</a></li>
+</ul>
+
+</div>
+
+<div id="content">
+
+<h1>Class <code>Client</code></h1>
+<p>TDLib client.</p>
+<p>
+
+</p>
+
+
+<h2><a href="#Methods">Methods</a></h2>
+<table class="function_list">
+	<tr>
+	<td class="name" nowrap><a href="#Client:send">Client:send(request)</a></td>
+	<td class="summary">Sends a request to the TDLib client.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Client:receive">Client:receive(timeout)</a></td>
+	<td class="summary">Receives incoming updates and request responses from the TDLib client.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Client:execute">Client:execute(request)</a></td>
+	<td class="summary">Synchronously executes TDLib request.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Client:isDestoyed">Client:isDestoyed()</a></td>
+	<td class="summary">Check if the tdlib client was destroyed or not.</td>
+	</tr>
+	<tr>
+	<td class="name" nowrap><a href="#Client:destroy">Client:destroy()</a></td>
+	<td class="summary">Destroy the tdlib client, automatically happens in garbage collection.</td>
+	</tr>
+</table>
+
+<br/>
+<br/>
+
+
+    <h2 class="section-header "><a name="Methods"></a>Methods</h2>
+
+    <dl class="function">
+    <dt>
+    <a name = "Client:send"></a>
+    <strong>Client:send(request)</strong>
+    </dt>
+    <dd>
+    Sends a request to the TDLib client.
+ May be called from any thread.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">request</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         The request content (JSON-serialized internally).
+        </li>
+    </ul>
+
+
+    <h3>Raises:</h3>
+    Error on json encoding failure, or if the client was destroyed.
+
+
+
+</dd>
+    <dt>
+    <a name = "Client:receive"></a>
+    <strong>Client:receive(timeout)</strong>
+    </dt>
+    <dd>
+    Receives incoming updates and request responses from the TDLib client.
+ May be called from any thread, but shouldn't be called simultaneously from two different threads.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">timeout</span>
+            <span class="types">optional <span class="type">number</span></span>
+         The maximum number of seconds allowed for this function to wait for new data.
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types">optional <a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        The request response, may be <code>nil</code> if the timeout expires.
+    </ol>
+
+    <h3>Raises:</h3>
+    Error on json decoding failure, or if the client was destroyed.
+
+
+
+</dd>
+    <dt>
+    <a name = "Client:execute"></a>
+    <strong>Client:execute(request)</strong>
+    </dt>
+    <dd>
+    Synchronously executes TDLib request.
+ May be called from any thread.</p>
+
+<p> Only a few requests can be executed synchronously.
+
+
+    <h3>Parameters:</h3>
+    <ul>
+        <li><span class="parameter">request</span>
+            <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+         The request content (JSON-serialized internally).
+        </li>
+    </ul>
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><a class="type" href="https://www.lua.org/manual/5.1/manual.html#5.5">table</a></span>
+        The request response.
+    </ol>
+
+    <h3>Raises:</h3>
+    Error on json en/decoding failure, or if the client was destroyed.
+
+
+
+</dd>
+    <dt>
+    <a name = "Client:isDestoyed"></a>
+    <strong>Client:isDestoyed()</strong>
+    </dt>
+    <dd>
+    Check if the tdlib client was destroyed or not.
+
+
+
+    <h3>Returns:</h3>
+    <ol>
+
+           <span class="types"><span class="type">boolean</span></span>
+        Whether the client was destroyed or not.
+    </ol>
+
+
+
+
+</dd>
+    <dt>
+    <a name = "Client:destroy"></a>
+    <strong>Client:destroy()</strong>
+    </dt>
+    <dd>
+    Destroy the tdlib client, automatically happens in garbage collection.
+
+
+
+
+    <h3>Raises:</h3>
+    Error if the client was already destroyed.
+
+
+
+</dd>
+</dl>
+
+
+</div> <!-- id="content" -->
+</div> <!-- id="main" -->
+<div id="about">
+<i>generated by <a href="http://github.com/stevedonovan/LDoc">LDoc 1.4.6</a></i>
+<i style="float:right;">Last updated 2020-06-08 20:30:45 </i>
+</div> <!-- id="about" -->
+</div> <!-- id="container" -->
+</body>
+</html>
