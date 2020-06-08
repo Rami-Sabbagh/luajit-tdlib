@@ -33,7 +33,7 @@ end
 
 --- Receives incoming updates and request responses from the TDLib client.
 -- May be called from any thread, but shouldn't be called simultaneously from two different threads.
--- @tparam ?number timeout The maximum number of seconds allowed for this function to wait for new data.
+-- @tparam number timeout The maximum number of seconds allowed for this function to wait for new data.
 -- @treturn ?table The request response, may be `nil` if the timeout expires.
 -- @raise Error on json decoding failure, or if the client was destroyed.
 function Client:receive(timeout)
