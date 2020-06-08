@@ -39,9 +39,8 @@ end
 function Client:receive(timeout)
     if not self._client then return error("The client is destroyed!") end
     local response = self._clib.td_json_client_receive(self._client, timeout)
-
+    if response == ffi.NULL then return end
     response = ffi.string(response)
-    if response == "" then return end
     response = cjson.decode(response)
 
     return response
